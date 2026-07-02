@@ -1,7 +1,7 @@
 # 757 Fantasy Football — Stock Tracker
 
 Live leaderboard of each league member's stock pick, ranked by percent gain
-since July 1st. Prices come from Yahoo Finance's public chart API (no API key)
+since July 1st. Prices come from Yahoo Finance's public chart API
 and refresh every 5 minutes.
 
 ## Editing picks
