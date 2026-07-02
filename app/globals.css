@@ -136,75 +136,6 @@ footer {
   font-size: 0.8rem;
 }
 
-.spark-col {
-  width: 100px;
-  text-align: center;
-}
-
-.spark {
-  display: block;
-  margin: 0 auto;
-}
-
-/* ---- season race chart ---- */
-
-.race {
-  margin-top: 1.25rem;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 0.9rem;
-}
-
-.race h2 {
-  font-size: 0.95rem;
-  margin-bottom: 0.6rem;
-}
-
-.race-svg {
-  width: 100%;
-  height: auto;
-}
-
-.race-axis {
-  fill: var(--muted);
-  font-size: 11px;
-}
-
-.race-label {
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.race-legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-  margin-top: 0.6rem;
-}
-
-.race-chip {
-  background: transparent;
-  border: 1px solid var(--chip);
-  color: var(--chip);
-  border-radius: 999px;
-  padding: 0.15rem 0.6rem;
-  font-size: 0.72rem;
-  cursor: pointer;
-}
-
-.race-chip.active {
-  background: var(--chip);
-  color: #0d1117;
-  font-weight: 600;
-}
-
-.race-hint {
-  color: var(--muted);
-  font-size: 0.72rem;
-  margin-top: 0.5rem;
-}
-
 /* ---- chat ---- */
 
 .chatpane {
@@ -417,11 +348,6 @@ footer {
 
   /* "started $X" is enough on small screens */
   .baseline-date {
-    display: none;
-  }
-
-  /* the race chart covers trends on mobile */
-  .spark-col {
     display: none;
   }
 
