@@ -250,14 +250,62 @@ footer {
   }
 }
 
-@media (max-width: 480px) {
-  th,
-  td {
-    padding: 0.55rem 0.5rem;
-    font-size: 0.85rem;
+@media (max-width: 640px) {
+  .page {
+    padding: 1.5rem 0.5rem 2rem;
+  }
+
+  header {
+    margin-bottom: 1.25rem;
   }
 
   h1 {
-    font-size: 1.35rem;
+    font-size: 1.3rem;
+  }
+
+  .subtitle {
+    font-size: 0.85rem;
+  }
+
+  th,
+  td {
+    padding: 0.55rem 0.4rem;
+    font-size: 0.82rem;
+  }
+
+  th {
+    font-size: 0.65rem;
+    letter-spacing: 0.04em;
+  }
+
+  .rank {
+    width: 1.7rem;
+  }
+
+  /* let long numbers wrap instead of forcing horizontal scroll */
+  .num {
+    white-space: normal;
+  }
+
+  /* truncate long company names */
+  .name {
+    max-width: 110px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* "started $X" is enough on small screens */
+  .baseline-date {
+    display: none;
+  }
+
+  .baseline {
+    font-size: 0.7rem;
+  }
+
+  .chat {
+    height: 60vh;
+    min-height: 360px;
   }
 }

@@ -26,7 +26,8 @@ function ChangeCell({ change, pctChange, baselinePrice }) {
         {pctChange.toFixed(2)}%)
       </span>
       <span className="baseline">
-        started {usd.format(baselinePrice)} on {baselineLabel}
+        started {usd.format(baselinePrice)}
+        <span className="baseline-date"> on {baselineLabel}</span>
       </span>
     </>
   );
@@ -63,7 +64,9 @@ export default async function Page() {
                 <th>Member</th>
                 <th>Stock</th>
                 <th className="num">Price</th>
-                <th className="num">Change since {baselineLabel}</th>
+                <th className="num">
+                  Change<span className="baseline-date"> since {baselineLabel}</span>
+                </th>
               </tr>
             </thead>
             <tbody>
