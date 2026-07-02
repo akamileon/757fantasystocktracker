@@ -147,9 +147,11 @@ export default function Chat() {
         audioUrl = supabase.storage.from("voice-memos").getPublicUrl(path).data.publicUrl;
       }
 
-      const { error } = await supabase
-        .from("messages")
-        .insert({ name: who, text: what || null, audio_url: audioUrl });
+      // Only mention audio_url when there's a memo, so plain text messages
+      // still work before the voice-memo migration has been run.
+      const row = { name: who, text: what || null };
+      if (audioUrl) row.audio_url = audioUrl;
+      const { error } = await supabase.from("messages").insert(row);
       if (error) throw error;
 
       setText("");
