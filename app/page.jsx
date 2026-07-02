@@ -1,6 +1,7 @@
 import { LEAGUE_NAME, BASELINE_DATE, PICKS } from "../lib/league";
 import { fetchAllQuotes } from "../lib/quotes";
 import Chat from "./Chat";
+import RaceChart from "./RaceChart";
 
 // Re-fetch prices at most every 5 minutes.
 export const revalidate = 300;
@@ -33,6 +34,35 @@ function ChangeCell({ change, pctChange, baselinePrice }) {
   );
 }
 
+function Sparkline({ history }) {
+  if (!history || history.length < 2) return null;
+  const w = 90;
+  const h = 28;
+  const pad = 2;
+  const vals = history.map((p) => p.close);
+  const min = Math.min(...vals);
+  const max = Math.max(...vals);
+  const span = max - min || 1;
+  const points = vals
+    .map((v, i) => {
+      const x = pad + (i * (w - 2 * pad)) / (vals.length - 1);
+      const y = h - pad - ((v - min) * (h - 2 * pad)) / span;
+      return `${x.toFixed(1)},${y.toFixed(1)}`;
+    })
+    .join(" ");
+  const up = vals[vals.length - 1] >= vals[0];
+  return (
+    <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} className="spark" aria-hidden="true">
+      <polyline
+        points={points}
+        fill="none"
+        stroke={up ? "var(--green)" : "var(--red)"}
+        strokeWidth="1.5"
+      />
+    </svg>
+  );
+}
+
 export default async function Page() {
   const rows = await fetchAllQuotes(PICKS);
   const updatedAt = new Date().toLocaleString("en-US", {
@@ -40,6 +70,18 @@ export default async function Page() {
     dateStyle: "medium",
     timeStyle: "short",
   });
+
+  // rows are already sorted best-first, so RaceChart's top 3 = first 3.
+  const chartSeries = rows
+    .filter((r) => !r.error && r.history?.length > 1)
+    .map((r) => ({
+      member: r.member,
+      symbol: r.symbol,
+      points: r.history.map((p) => ({
+        date: p.date,
+        pct: ((p.close - r.baselinePrice) / r.baselinePrice) * 100,
+      })),
+    }));
 
   return (
     <main className="page">
@@ -63,6 +105,7 @@ export default async function Page() {
                 <th className="rank">#</th>
                 <th>Member</th>
                 <th>Stock</th>
+                <th className="spark-col">Trend</th>
                 <th className="num">Price</th>
                 <th className="num">
                   Change<span className="baseline-date"> since {baselineLabel}</span>
@@ -77,6 +120,9 @@ export default async function Page() {
                   <td>
                     <span className="symbol">{row.symbol}</span>
                     <span className="name">{row.error ? "price unavailable" : row.name}</span>
+                  </td>
+                  <td className="spark-col">
+                    {row.error ? null : <Sparkline history={row.history} />}
                   </td>
                   <td className="num">{row.error ? "—" : usd.format(row.price)}</td>
                   <td className="num">
@@ -94,6 +140,9 @@ export default async function Page() {
               ))}
             </tbody>
           </table>
+
+          <RaceChart series={chartSeries} />
+
           <footer>Prices update every 5 minutes · Last updated {updatedAt} ET</footer>
         </section>
 

@@ -40,6 +40,32 @@ alter publication supabase_realtime add table messages;
 If the env vars are missing, the page still works — the chat panel just shows
 a "not set up yet" note.
 
+### Voice memos
+
+Chat voice memos need a storage bucket and an `audio_url` column, added with
+this one-time SQL:
+
+```sql
+alter table messages add column audio_url text;
+alter table messages alter column text drop not null;
+alter table messages drop constraint messages_text_check;
+alter table messages add constraint messages_text_check
+  check (text is null or char_length(text) <= 500);
+alter table messages add constraint messages_content_check
+  check ((text is not null and char_length(text) > 0) or audio_url is not null);
+
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values ('voice-memos', 'voice-memos', true, 2097152,
+        array['audio/webm', 'audio/mp4', 'audio/mpeg', 'audio/ogg']);
+
+create policy "anyone can upload voice memos" on storage.objects
+  for insert with check (bucket_id = 'voice-memos');
+create policy "anyone can read voice memos" on storage.objects
+  for select using (bucket_id = 'voice-memos');
+```
+
+Memos are capped at 60 seconds and 2 MB.
+
 ## Running locally
 
 ```bash
